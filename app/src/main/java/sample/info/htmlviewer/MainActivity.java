@@ -4,46 +4,30 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
-import android.webkit.WebSettings;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener {
 
-    WebView browser;
+    Button mWebviewer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND,
-                WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
         setContentView(R.layout.activity_main);
 
-        browser = (WebView) findViewById(R.id.webView);
+        mWebviewer = (Button) findViewById(R.id.button);
+        mWebviewer.setOnClickListener(this);
 
-        browser.setWebViewClient(new myWebViewClient());
-        WebSettings webSettings = browser.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setBuiltInZoomControls(true);
+    }
 
-
-        //case1
-        //browser.loadUrl("http://www.naver.com");
-        //case2
-
-        browser.loadData("<meta http-equiv='Content-Type' content='text/html; charset=utf-8' /><html><body>Hello, Sample   !</body></html>", "text/html", "utf-8");
-        //case3
-        //browser.loadUrl("file:///android_asset/test.htm");
-
-        browser.getSettings().setJavaScriptEnabled(true);    // 자바스크립트 사용 시 설정
-
-
+    @Override
+    public void onClick(View v) {
     }
 
     class myWebViewClient extends WebViewClient {
