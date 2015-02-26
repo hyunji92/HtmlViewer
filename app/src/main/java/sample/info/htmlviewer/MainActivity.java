@@ -13,7 +13,7 @@ import android.webkit.WebViewClient;
 
 public class MainActivity extends Activity {
 
-    WebView browser ;
+    WebView browser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,7 @@ public class MainActivity extends Activity {
 
 
     }
+
     class myWebViewClient extends WebViewClient {
 
         @Override
