@@ -32,7 +32,6 @@ public class WebViewDialogActivity extends Activity
 			@Override
 			public void onClick(View v) 
 			{
-				//Display the WebView dialog
 				webViewDialog.show();
 			}
 		});
