@@ -1,4 +1,4 @@
-package sample.info.htmlviewer; // 41 Post - Created by DimasTheDriver on Feb/21/2012 . Part of the 'Android: creating a WebView dialog' post. Available at: http://www.41post.com/?p=4673
+package sample.info.htmlviewer;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -18,7 +18,6 @@ public class WebViewDialogActivity extends Activity
 	private Button btClose;
 	
 
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) 
     {
@@ -30,6 +29,7 @@ public class WebViewDialogActivity extends Activity
         btLaunchWVD.setOnClickListener(new OnClickListener()
         {
 			@Override
+
 			public void onClick(View v) 
 			{
 				webViewDialog.show();
@@ -56,8 +56,18 @@ public class WebViewDialogActivity extends Activity
         webView.setScrollbarFadingEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setUserAgentString("AndroidWebView");
+        //webView.getSettings().setUserAgentString("AndroidWebView");
         webView.clearCache(true);
-        webView.loadUrl("file://sdcard/html/updates.html");
+        //webView.loadUrl("file://sdcard/html/updates.html");
+
+
+        //case1
+        webView.loadUrl("http://m.naver.com");
+        //case2
+        //webView.loadData("<meta http-equiv='Content-Type' content='text/html; charset=utf-8' /><html><body>Hello, 마이크!</body></html>", "text/html", "utf-8");
+        //case3
+        //browser.loadUrl("file:///android_asset/test.htm");
+
+
     }
 }
