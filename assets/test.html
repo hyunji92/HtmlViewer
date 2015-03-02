@@ -1,27 +1,28 @@
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=euc-kr">
+    <script language="javascript">
+ function vibration(){
+  // javascript->java method
+  window.android.vibration();
+ }
 
-<script language="JavaScript">
-
-function setMessage(arg) { 
-	document.getElementById('textMessageFromApp').innerHTML = arg;
-}
-
-function sendMessage(msg){
-	window.HybridApp.setMessage(msg);
-}
+ function fromApp()
+ {
+  // java method -> javascript
+  alert('call to javascript');
+ }
+ 
 </script>
+    <title>안드로이드 데모 - 자바스크립트 호출페이지</title>
 </head>
-
 <body>
-<h2>Hybrid App (WEB+APP)</h2>
-<hr/>
-<input type="text" id="textMessageFromWeb" value="Hello, Hybrid(WEB)!!"/>
-<input type="button" value="Send Message" onclick="sendMessage(document.getElementById('textMessageFromWeb').value)"/>
-
-<hr/>
-Message From App
-<p id="textMessageFromApp"> 
-</p>
+<h2>WebView Test</h2>
+<br />
+<br />
+<a href="http://www.google.com">go to google</a>
+<br />
+<br />
+<input type="button" value="vibrate" onClick="javascript:vibration();" />
 </body>
-</html>
+</html> 
