@@ -1,12 +1,12 @@
 package sample.info.htmlviewer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+@SuppressLint({"SetJavaScriptEnabled", "JavascriptInterface"})
 public class WebViewDialogActivity extends Activity {
     private Dialog webViewDialog;
     private WebView mWebView;
@@ -30,8 +31,6 @@ public class WebViewDialogActivity extends Activity {
     private Button mBtLocalHtml;
     private Button mBtClose;
 
-
-    String mStringHead;
     private final Handler handler = new Handler();
 
     @Override
@@ -65,7 +64,7 @@ public class WebViewDialogActivity extends Activity {
                 webViewDialog.dismiss();
             }
         });
-
+        // ** 테스트 사이트를 웹뷰 다이얼로그에 로딩한다.
         mWebView = (WebView) webViewDialog.findViewById(R.id.wb_webview);
 
         WebSettings set = mWebView.getSettings();
@@ -76,9 +75,6 @@ public class WebViewDialogActivity extends Activity {
         set.setCacheMode(WebSettings.LOAD_NO_CACHE); // 웹뷰가 캐시를 사용하지 않도록 설정
 
         //mWebView.addJavascriptInterface(new JavascriptInterface(), "WebViewDialogActivity");
-        // javascript에게 공개할 클래스와 그 클래스의 공개명칭
-        //mWebView.addJavascriptInterface(new AndroidBridge(), "WebViewDialogActivity");
-
         //case1 보통 Url
         //mWebView.loadUrl("http://m.naver.com");
         mWebView.loadUrl("http://www.google.com");
@@ -87,30 +83,28 @@ public class WebViewDialogActivity extends Activity {
         //mWebView.loadData("<meta http-equiv='Content-Type' content='text/html; charset=utf-8' /><html><body>Hello, 마이크!</body></html>", "text/html", "utf-8");
         //case3
         //mWebView.loadUrl(testUrl);
-
-
         mWebView.setWebViewClient(new TestWebViewClient());
         //mWebView.setWebChromeClient(new TestWebViewClient()); // 4.4 kitkat
 
+
         // ** 로컬 HTML은 메인액티비티에서 바로 볼수 있도록 따로 처리한다.
         mLocalWebView = (WebView) findViewById(R.id.local_webView);
+        String testUrl = "file:///android_asset/javapage.html";
+        mLocalWebView.getSettings().setJavaScriptEnabled(true);
+        mLocalWebView.loadUrl(testUrl);
+        // 자바스크립트에서 AndroidBridge()에 "android"라는 이름으로 접근할 수 있게 됩니다.
+        mLocalWebView.addJavascriptInterface(new AndroidBridge(), "android");
         mBtLocalHtml = (Button) findViewById(R.id.bt_localfile);
         mBtLocalHtml.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                mLocalWebView.loadUrl("javascript:setMessage('" + mEditText.getText() + "')");
                 //로컬 html을 불러오기 위한 url
-                String testUrl = "file:///android_asset/test.html";
-                mLocalWebView.getSettings().setJavaScriptEnabled(true);
-                mLocalWebView.loadUrl(testUrl);
-                mLocalWebView.setWebViewClient(new LocalWebViewClient());
+                //mLocalWebView.setWebViewClient(new LocalWebViewClient());
 
             }
         });
-
-
-
-
 
     }
 
@@ -122,8 +116,7 @@ public class WebViewDialogActivity extends Activity {
         public void setMessage(final String arg) { // must be final
             handler.post(new Runnable() {
                 public void run() {
-                    Log.d("WebViewDialogActivity", "setMessage(" + arg + ")");
-                    mTextView.setText(mStringHead + arg);
+                    mTextView.setText("받은 메시지 : \n" + arg);
                 }
             });
         }
