@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
@@ -25,13 +24,10 @@ public class WebViewerActivity extends Activity {
     private WebView mWebView;
     private TextView mTextView;
     private EditText mEditText;
-    private WebView mLocalWebView;
 
     private Button mBtLaunchWVD;
-    private Button mBtLocalHtml;
     private Button mBtClose;
 
-    private final Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
