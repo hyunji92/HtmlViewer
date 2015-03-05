@@ -78,7 +78,12 @@ public class WebViewerActivity extends Activity {
 
 
         //assets의 HTML파일 이용
-        mWebView.loadUrl("file:///android_asset/test.html");
+        mWebView.loadDataWithBaseURL("file:///android_asset/",
+                "<meta http-equiv=’Content-Type’ content=’text/html; charset=utf-8′ /><html><body> <img src='file:///android_asset/ic_launcher'/> Hello, TEST!</body></html>",
+                "text/html",
+                "utf-8",
+                "file:///android_asset/");
+                //loadUrl("file:///android_asset/test.html");
 
         //mWebView 스크립트 허용
         mWebView.getSettings().setJavaScriptEnabled(true);
