@@ -19,6 +19,7 @@
             android:layout_marginTop="15dp"
             android:gravity="center_horizontal"
             android:text="WebView Dialog"
+            android:layout_marginLeft="5dp"
             android:textSize="20dp" />
 
         <Button
@@ -26,46 +27,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
             android:text="Launch WebView Dialog" />
 
     </LinearLayout>
 
-    <WebView
-        android:id="@+id/local_webView"
-        android:layout_width="300dp"
-        android:layout_height="250dp"
-        android:layout_below="@+id/linearLayout"
-        android:layout_marginTop="10dp" />
-
-    <LinearLayout
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/local_webView"
-        android:layout_marginTop="10dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:padding="5dp">
-
-        <EditText
-            android:id="@+id/web_edittext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/local_webView"
-            android:layout_gravity="center_horizontal"
-            android:layout_toLeftOf="@+id/bt_launchwvd"
-            android:layout_toStartOf="@+id/bt_launchwvd"
-            android:text=" Hello~! TEST ! " />
-
-        <Button
-            android:id="@+id/bt_localfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/web_edittext"
-            android:layout_gravity="center_horizontal"
-            android:layout_toEndOf="@+id/web_edittext"
-            android:layout_toRightOf="@+id/web_edittext"
-            android:text="local WebView Dialog" />
-    </LinearLayout>
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/web_edittext"
+        android:layout_below="@+id/linearLayout"
+        android:hint="Hello! WebViewer"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>
