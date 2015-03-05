@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebSettings;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -20,7 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 @SuppressLint({"SetJavaScriptEnabled", "JavascriptInterface"})
-public class WebViewDialogActivity extends Activity {
+public class WebViewerActivity extends Activity {
     private Dialog webViewDialog;
     private WebView mWebView;
     private TextView mTextView;
@@ -47,7 +47,6 @@ public class WebViewDialogActivity extends Activity {
 
             public void onClick(View v) {
                 webViewDialog.show();
-                //mWebView.loadUrl("javascript:setMessage('" + mEditText.getText() + "')");
             }
         });
 
@@ -60,66 +59,35 @@ public class WebViewDialogActivity extends Activity {
         mBtClose.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Dismiss the dialog
                 webViewDialog.dismiss();
             }
         });
+
         // ** 테스트 사이트를 웹뷰 다이얼로그에 로딩한다.
         mWebView = (WebView) webViewDialog.findViewById(R.id.wb_webview);
 
-        WebSettings set = mWebView.getSettings();
-        mWebView.setScrollbarFadingEnabled(false);
-        mWebView.setHorizontalScrollBarEnabled(false);
-        //웹뷰가 자바스크립트를 사용할 수 있도록 설정
-        set.setJavaScriptEnabled(true);
-        set.setCacheMode(WebSettings.LOAD_NO_CACHE); // 웹뷰가 캐시를 사용하지 않도록 설정
-
-        //mWebView.addJavascriptInterface(new JavascriptInterface(), "WebViewDialogActivity");
-        //case1 보통 Url
-        //mWebView.loadUrl("http://m.naver.com");
-        mWebView.loadUrl("http://www.google.com");
-
-        //case2
-        //mWebView.loadData("<meta http-equiv='Content-Type' content='text/html; charset=utf-8' /><html><body>Hello, 마이크!</body></html>", "text/html", "utf-8");
-        //case3
-        //mWebView.loadUrl(testUrl);
-        mWebView.setWebViewClient(new TestWebViewClient());
-        //mWebView.setWebChromeClient(new TestWebViewClient()); // 4.4 kitkat
+        //URL 링크
+        //browser.loadUrl("http://m.naver.com");
 
 
-        // ** 로컬 HTML은 메인액티비티에서 바로 볼수 있도록 따로 처리한다.
-        mLocalWebView = (WebView) findViewById(R.id.local_webView);
-        String testUrl = "file:///android_asset/javapage.html";
-        mLocalWebView.getSettings().setJavaScriptEnabled(true);
-        mLocalWebView.loadUrl(testUrl);
-        // 자바스크립트에서 AndroidBridge()에 "android"라는 이름으로 접근할 수 있게 됩니다.
-        mLocalWebView.addJavascriptInterface(new AndroidBridge(), "android");
-        mBtLocalHtml = (Button) findViewById(R.id.bt_localfile);
-        mBtLocalHtml.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        //HTML 직접 생성
+        /*
+		String msg ="<html><body>Hellow Android World!!!</body></html>";
+		//baseURL, data, mimeType(문서타입), encoding, historyUrl
+		browser.loadDataWithBaseURL(null, msg, "text/html", "UTF-8", null);*/
 
-                mLocalWebView.loadUrl("javascript:setMessage('" + mEditText.getText() + "')");
-                //로컬 html을 불러오기 위한 url
-                //mLocalWebView.setWebViewClient(new LocalWebViewClient());
 
-            }
-        });
+        //assets의 HTML파일 이용
+        mWebView.loadUrl("file:///android_asset/test.html");
 
-    }
+        //mWebView 스크립트 허용
+        mWebView.getSettings().setJavaScriptEnabled(true);
 
-    /**
-     * Object exposed to JavaScript
-     */
-    private class AndroidBridge {
-        @JavascriptInterface
-        public void setMessage(final String arg) { // must be final
-            handler.post(new Runnable() {
-                public void run() {
-                    mTextView.setText("받은 메시지 : \n" + arg);
-                }
-            });
-        }
+
+        MyWebChromeClient myWebChromeClient = new MyWebChromeClient();
+        //브라우저에 등록
+        mWebView.setWebChromeClient(myWebChromeClient);
+
     }
 
 
@@ -153,12 +121,57 @@ public class WebViewDialogActivity extends Activity {
         }
     }
 
-    private class LocalWebViewClient extends WebViewClient {
+    //자바 스크립트의 alert 대체 코드 작성
+    //자바 스크립트의 alert 경고창을 대체하는 안드로이드  경고창 구현
+    private class MyWebChromeClient extends WebChromeClient {
+
+       /** @Override
+        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+            //message	: '경고창'
+            new AlertDialog.Builder(WebViewDialogActivity.this).setTitle("경고")
+                    .setCancelable(false)
+                    .setNeutralButton("확인", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).show();
+
+            result.confirm();
+
+            return true;
+        }**/
 
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
-            return true;
+        public void onProgressChanged(WebView view, int newProgress) {
+            // TODO Auto-generated method stub
+            // 모든 Activity는 자체 Progress를 가지고 있다.
+            WebViewerActivity.this.setProgress(newProgress * 100); // 값의 차이가 100차이라서 곱함
+
+            //super.onProgressChanged(view, newProgress);
         }
+
+        @Override
+        public boolean onCreateWindow(WebView view, boolean isDialog,
+                                      boolean isUserGesture, Message resultMsg) {
+
+            // Url 문자열을 가져옴.
+            WebView.HitTestResult result = view.getHitTestResult();
+            String url = result.getExtra();
+
+            if (Uri.parse(url).getHost().equals("www.example.com")) {
+                mTextView.setText("TTTEST CHANGE");
+
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+                return true;
+            }
+
+            return super.onCreateWindow(view, isDialog, isUserGesture, resultMsg);
+        }
+
+
     }
 }
