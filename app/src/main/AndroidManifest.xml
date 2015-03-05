@@ -9,7 +9,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".WebViewDialogActivity"
+            android:name=".WebViewerActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
